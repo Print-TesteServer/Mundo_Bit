@@ -5,4 +5,4 @@
  
  - Estou aberto a sujestões para corrigir algum BUG e melhorar o Projeto!
 
- OBS: Ainda estou a verificar o motivo mas o Visual Studio Code está localizando erros no código.. sendo que está a funcionar normalmento no Pycharm... talvez esteja faltando alguma biblioteca no mesmo.
+ OBS: Em Construção.
