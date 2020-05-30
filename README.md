@@ -5,7 +5,7 @@
  
  - Estou aberto a sujestões para corrigir algum BUG e melhorar o Projeto!
 
-##ScreenShots:
+ ## ScreenShots:
 ![menu do jogo](https://github.com/Print-TesteServer/Desenvolvendo-meu-primeiro-Jogo-Mundo-Bit-/blob/master/dados/screenshots/menu.PNG)
 
-###Em Construção.
+ ### Em Construção.
