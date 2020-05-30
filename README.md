@@ -6,8 +6,8 @@
  - Estou aberto a sujestões para corrigir algum BUG e melhorar o Projeto!
 
  ## Capturas de Tela:
- ### - Menudo Jogo
+ ### - Menu do Jogo
 ![menu do jogo](https://github.com/Print-TesteServer/Desenvolvendo-meu-primeiro-Jogo-Mundo-Bit-/blob/master/dados/screenshots/menu.PNG)
  ### - Jogo 
  ![Jogo](https://github.com/Print-TesteServer/Desenvolvendo-meu-primeiro-Jogo-Mundo-Bit-/blob/master/dados/screenshots/Jogo.PNG) 
- ### Em Construção.
+ #### Em Construção.
