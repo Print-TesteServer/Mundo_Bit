@@ -1,7 +1,6 @@
 import pygame
 import pygame_gui
 import random
-import time
 
 from pygame.locals import *
 
@@ -52,88 +51,51 @@ class GameApp():
                         if event.ui_element == self.Play_button:
                             self.game_state = "game"
                         if event.ui_element == self.Help_button:
-                            self.game_state = "Help"
+                            self.game_state = "help"
 
                 if self.game_state == "menu":
                     self.menu_manager.update(self.deltaTime)
 
-                # Rodando o Jogo
+                # Rodando o menu
                 if self.game_state == "menu":
                     self.menu_manager.draw_ui(self.display)
 
-                if self.game_state == "Help":
+                if self.game_state == "help":
                     display = pygame.display.set_mode([1080, 480], pygame.RESIZABLE)
                     pygame.display.set_caption("Mundo Bit")
                     display.fill([230, 255, 255])
 
-                    # Adicionando Texto
-                    BLACK = (0, 0, 0)
-                    WHITE = (255, 255, 255)
-                    DRAW = (0, 122, 179)
+                    self.game_state = "help"
+                    self.help_manager = pygame_gui.UIManager((1080, 480))
 
-                    sysfont = pygame.font.get_default_font()
-                    print("System font :", sysfont)
+                    self.textbox = pygame_gui.elements.UITextBox(html_text="Bem-Vindo! <br> <br>"
+                        "- História: <br>"
+                        "Em um mundo muito distante, na era dos 8 e 16 Pixels... Um grande ataque do Rei ogro está em andamento para conquistar o castelo "
+                        "humano, apenas você, um humilde mas corajoso aventureiro pode impedir os ogros! <br> <br>"
+                        "- Como Jogar: <br> Use [A] e [D] para se mover no  cenário, [W] para Pular, [Espaço] para atacar <br> <br>"
+                        "- Apoio: <br> O Jogo tem seu código publicado no Github, caso queira contribuir com o mesmo: https://github.com/Print-TesteServer", relative_rect=pygame.Rect
+                        ((30, 30), (1020, 390)), manager=self.help_manager)
 
-                    t0 = time.time()
-                    font = pygame.font.SysFont(None, 48)
-                    print("time needed for font creation :", time.time()-t0)
+                    self.Back_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect
+                        (((0) , 430), (100, 50)), text="Voltar", manager=self.help_manager)
 
-                    img = font.render(sysfont, True, BLACK)
-                    rect = img.get_rect()
-                    pygame.draw.rect(img, WHITE, rect, 1)
+                    for event in pygame.event.get():
+                        if event.type == QUIT:
+                            self.run = False
+                        self.help_manager.process_events(event)
 
-                    font1 = pygame.font.SysFont("Bem-Vindo", 24)
-                    img1 = font1.render("Bem-Vindo!", True, WHITE)
+                        if event.type == pygame.USEREVENT:
+                            if event.user_type == pygame_gui.UI_BUTTON_PRESSED:
+                                if event.ui_element == self.Back_button:
+                                    self.game_state = "menu"
 
-                    font1 = pygame.font.SysFont("- História", 24)
-                    img2 = font1.render("- História:", True, BLACK)
+                    if self.game_state == "help":
+                        self.help_manager.update(self.deltaTime)
 
-                    font1 = pygame.font.SysFont("História", 24)
-                    img3 = font1.render("Em um mundo muito distante, na era dos 8 e 16 Pixels... Um grande ataque do Rei ogro está em andamento para conquistar o castelo", True, BLACK)
+                    if self.game_state == "help":
+                        self.help_manager.draw_ui(display)
 
-                    font1 = pygame.font.SysFont("História", 24)
-                    img4 = font1.render("humano, apenas você, um humilde mas corajoso aventureiro pode impedir os ogros!", True,BLACK)
-
-                    font1 = pygame.font.SysFont("- Como Jogar", 24)
-                    img5 = font1.render("- Como Jogar:", True, BLACK)
-
-                    font1 = pygame.font.SysFont("- Apoio", 24)
-                    img6 = font1.render("- Apoio:", True, BLACK)
-
-                    font1 = pygame.font.SysFont("Apoio", 24)
-                    img7 = font1.render("O Jogo tem seu código publicado no Github, caso queira contribuir com o mesmo:", True, BLACK)
-
-                    font1 = pygame.font.SysFont("Apoio", 24)
-                    img8 = font1.render("https://github.com/Print-TesteServer", True, WHITE)
-
-                    fonts = pygame.font.get_fonts()
-                    print(len(fonts))
-                    for i in range(7):
-                        print(fonts[i])
-
-                    running = True
-                    background = DRAW
-                    while running:
-                        for event in pygame.event.get():
-                            if event.type == QUIT:
-                                running = False
-
-                        # Posição dos textos
-                        display.fill(background)
-                        display.blit(img1, (20, 20))
-                        display.blit(img2, (40, 70))
-                        display.blit(img3, (20, 90))
-                        display.blit(img4, (20, 110))
-                        display.blit(img5, (40, 150))
-                        display.blit(img6, (40, 170))
-                        display.blit(img7, (20, 190))
-                        display.blit(img8, (664, 190))
-
-                        pygame.display.update()
-
-                    pygame.quit()
-
-
+                # Rodando o jogo
                 if self.game_state == "game":
                     display = pygame.display.set_mode([1280, 720])
                     pygame.display.set_caption("Mundo Bit")
