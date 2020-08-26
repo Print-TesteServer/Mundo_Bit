@@ -4,8 +4,12 @@ import random
 
 from pygame.locals import *
 
+from animation import *
+
 from personagem import player
 from inimigos import inimigo1
+from inimigos import inimigo2
+from golpe import golpe1
 
 
 # Criando o Menu
@@ -43,8 +47,8 @@ class GameApp():
         self.textbox = pygame_gui.elements.UITextBox(html_text="Bem-Vindo! <br> <br>"
             "- História: <br>"
             "Em um mundo muito distante, na era dos 8 e 16 Pixels... Um grande ataque do Rei ogro está em andamento para conquistar o castelo "
-            "humano, apenas você, um humilde mas corajoso aventureiro pode impedir os ogros! <br> <br>"
-            "- Como Jogar: <br> Use [A] e [D] para se mover no  cenário, [W] para Pular, [Espaço] para atacar <br> <br>"
+            "humano, apenas você, um humilde mas corajoso aventureiro e seu canhão, podem impedir os ogros! <br> <br>"
+            "- Como Jogar: <br> Use [A] e [D] para se mover na horizontal, [W] e [S] para se mover na vertical, [Espaço] para atacar e NÃO!, você não anda na diagonal... <br> <br>"
             "- Apoio: <br> O Jogo tem seu código publicado no Github, caso queira contribuir com o mesmo: https://github.com/Print-TesteServer",
             relative_rect=pygame.Rect
             ((30, 30), (1020, 390)), manager=self.help_manager)
@@ -53,46 +57,57 @@ class GameApp():
         (((0), 430), (100, 50)), text="Voltar", manager=self.help_manager)
 
         # Elementos do options manager
-
         self.Back2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect
         (((0), 430), (100, 50)), text="Voltar", manager=self.options_manager)
 
-        self.textbox = pygame_gui.elements.UITextBox(html_text="", relative_rect=pygame.Rect((50, 50), (980, 380)),
-                                                     manager=self.options_manager)
+        self.textbox = pygame_gui.elements.UITextBox(html_text="Em construção", relative_rect=pygame.Rect
+        ((50, 50), (980, 380)),manager=self.options_manager)
 
-        # 0,0 - 1.0
+        # Slider
         self.slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect(((1080 / 2) - 40, 480 / 2 - 100), (200, 30)),
             start_value=0.5,
             value_range=(0.0, 1.0),
             manager=self.options_manager
         )
-
+        self.label = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(((1080 / 2) - 90, 480 / 2 - 100), (50, 30)),
+            text="Som",
+            manager=self.options_manager
+        )
+        self.label2 = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(((1080 / 2) + 160, 480 / 2 - 100), (50, 30)),
+            text="Text",
+            manager=self.options_manager
+        )
         self.slider2 = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect(((1080 / 2) - 40, 480 / 2 - 60), (200, 30)),
             start_value=0.5,
             value_range=(0.0, 1.0),
             manager=self.options_manager
         )
-
         self.slider3 = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect(((1080 / 2) - 40, 480 / 2 - 20), (200, 30)),
             start_value=0.5,
-            value_range=(0.0, 1.0),
+            value_range=(0, 1),
             manager=self.options_manager
         )
 
-        self.label = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(((1080 / 2) - 90, 480 / 2 - 100), (50, 30)),
-            text="Som",
+        self.labe3 = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(((1080 / 2) - 100, 480 / 2 - 60), (50, 30)),
+            text="Idioma",
             manager=self.options_manager
         )
 
-        self.label2 = pygame_gui.elements.UILabel(
-            relative_rect=pygame.Rect(((1080 / 2) + 160, 480 / 2 - 100), (50, 30)),
+        self.label4 = pygame_gui.elements.UILabel(
+            relative_rect=pygame.Rect(((1080 / 2) + 160, 480 / 2 - 60), (50, 30)),
             text="Text",
             manager=self.options_manager
         )
+
+        self.golpe = Animation([
+                "data/golpe1.png"
+        ], 0.5)
 
         # Rodando o jogo
         while self.run:
@@ -139,7 +154,7 @@ class GameApp():
                 self.menu_manager.draw_ui(self.display)
 
             elif self.game_state == "options":
-                self.display.fill([0, 122, 179])  # FUNDO DO MENU
+                self.display.fill([0, 122, 179])  # FUNDO DO OPTIONS
                 self.options_manager.update(self.deltaTime)
                 self.options_manager.draw_ui(self.display)
 
@@ -150,12 +165,13 @@ class GameApp():
 
             elif self.game_state == "game":
                 display = pygame.display.set_mode([1280, 720])
+                display.blit(self.golpe.image, (200,300))
                 pygame.display.set_caption("Mundo Bit")
-                #self.display.fill([0, 122, 179])  # FUNDO DO JOGO
 
                 # Objetos
                 objectGroup = pygame.sprite.Group()
                 inimigosGroup = pygame.sprite.Group()
+                golpeGroup = pygame.sprite.Group()
 
                 # Cenário
                 bg = pygame.sprite.Sprite(objectGroup)
@@ -182,11 +198,18 @@ class GameApp():
                         clock.tick(60)
 
                         for event in pygame.event.get():
-                            if event.type == pygame.QUIT:
+                            if event.type == QUIT:
                                 gameLoop = False
-                            elif event.type == pygame.KEYDOWN:
+                                self.run = False
+                            if event.type == pygame.KEYDOWN:
                                 if event.key == pygame.K_SPACE:
-                                    espadasom.play()
+                                    timer += 1
+                                    if timer > 19:
+                                        timer = 0
+                                        espadasom.play()
+                                        novogolpe = golpe1(objectGroup, golpeGroup)
+                                        novogolpe.rect.center = personagem.rect.center
+                                        novogolpe.rect.right = personagem.rect.right
 
                         # Update
                         objectGroup.update()
@@ -194,12 +217,26 @@ class GameApp():
                         timer += 1
                         if timer > 30:
                             timer = 0
-                            if random.random() < 0.2:
+                            if random.random() < 0.4:
                                 NovoInimigo = inimigo1(objectGroup, inimigosGroup)
+
+                        timer += 1
+                        if timer > 30:
+                            timer = 0
+                            if random.random() < 0.2:
+                                NovoInimigo2 = inimigo2(objectGroup, inimigosGroup)
+
+                        collisions = pygame.sprite.spritecollide(personagem, inimigosGroup, False, pygame.sprite.collide_mask)
+
+                        if collisions:
+                            gameLoop = False
+
+                        hits = pygame.sprite.groupcollide(golpeGroup, inimigosGroup, True, True, pygame.sprite.collide_mask)
 
                         # Adicionando cor e imagens a Janela
                         objectGroup.draw(display)
 
+                        self.golpe.update()
                         pygame.display.update()
 
             pygame.display.update()
