@@ -105,9 +105,7 @@ class GameApp():
             manager=self.options_manager
         )
 
-        self.golpe = Animation([
-                "data/golpe1.png"
-        ], 0.5)
+        self.golpe = Animation(["data/golpe1.png"], 0.5)
 
         # Rodando o jogo
         while self.run:
@@ -164,7 +162,7 @@ class GameApp():
                 self.help_manager.draw_ui(self.display)
 
             elif self.game_state == "game":
-                display = pygame.display.set_mode([1280, 720])
+                display = pygame.display.set_mode([1200, 600])
                 display.blit(self.golpe.image, (200,300))
                 pygame.display.set_caption("Mundo Bit")
 
@@ -204,7 +202,7 @@ class GameApp():
                             if event.type == pygame.KEYDOWN:
                                 if event.key == pygame.K_SPACE:
                                     timer += 1
-                                    if timer > 19:
+                                    if timer > 20:
                                         timer = 0
                                         espadasom.play()
                                         novogolpe = golpe1(objectGroup, golpeGroup)
