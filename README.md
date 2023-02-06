@@ -2,6 +2,7 @@
  
  - Aqui irá ficar o código do meu primeiro Jogo! criado através do Pycharm, usando o python 3.7 e a biblioteca Pygame e Pygame_gui.
  - Estou aberto a sujestões para corrigir algum BUG e melhorar o Projeto!
+ - Youtube: https://youtu.be/GZ5CjcPGuJA
  
  ## Menu do Jogo
 ![menu do jogo](https://github.com/Print-TesteServer/Desenvolvendo-meu-primeiro-Jogo-Mundo-Bit-/blob/master/data/screenshots/menu.PNG)
